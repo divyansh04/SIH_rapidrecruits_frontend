@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1022063620007",
+    "project_id": "rapid-recruits-4c4a1",
+    "storage_bucket": "rapid-recruits-4c4a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022063620007:android:75f11adf7e3f1922315082",
+        "android_client_info": {
+          "package_name": "com.TheLastCode.RapidRecruits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022063620007-loeb5nuvth1itrreccn8mqsj6rshks8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIWgH0sNUiAHbpGYB0bkGL9MEfz6AYS_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022063620007-loeb5nuvth1itrreccn8mqsj6rshks8u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

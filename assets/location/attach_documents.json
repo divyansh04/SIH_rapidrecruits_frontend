@@ -1,0 +1,20 @@
+{
+    "documents":[
+        {
+            "type":"Identity Proof",
+            "category":["Voter Card","Adhar Card","Driving License"]
+        },
+        {
+            "type":"Educational Document",
+            "category":["Graduation","Post Graduation","Diploma","Phd"]
+        },
+        {
+            "type":"Professional Document",
+            "category":["Resume","Offer Letter","Experience Letter","Salary Slip"]
+        },
+        {
+            "type":"Awards & Achievements",
+            "category":["Educational Certificate","Educational Awards","Professional Awards","Extra Curricular"]
+        }
+    ]
+}

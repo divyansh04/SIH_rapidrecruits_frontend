@@ -1,7 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:RapidRecruits/components/rounded_input.dart';
+import 'package:RapidRecruits/components/searchable_dropdown.dart';
 import 'package:RapidRecruits/utilities/constants.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +21,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final controller = GetIt.I<AddEmployeeController>();
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    controller.loadStates();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +136,29 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           ),
                         ],
                       ),
+                      Container(
+                        width: 150,
+                        child: SearchableDD(
+                          isFilled: true,
+                          color: kPrimaryColorInstitute.withAlpha(50),
+                          validate: (state) {
+                            if (state == null) {
+                              return 'State is required';
+                            }
+                            return '';
+                          },
+                          hintText: 'Search State',
+                          label: 'State',
+                          items: controller.allStates,
+                          selectedItem: controller.newState,
+                          onChanged: (value) {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              controller.newState = value!;
+                            });
+                          },
+                        ),
+                      ),
                       RoundedInput(
                           icon: Icons.date_range_outlined,
                           hint: 'Date of Birth',
@@ -162,6 +193,100 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           hint: 'Department',
                           controller: controller.department,
                           color: kPrimaryColorInstitute),
+                      AutoCompleteTextField(
+                        key: controller.key,
+                        textChanged: (value) {
+                          if (value.endsWith(',')) {
+                            value = value.split(',').first;
+                            setState(() {
+                              controller.keySkills.add(value);
+                              controller.skillsController.clear();
+                            });
+                            value = '';
+                          }
+                        },
+                        controller: controller.skillsController,
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.black),
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: kPrimaryColorInstitute.withAlpha(50),
+                            alignLabelWithHint: true,
+                            icon: const Icon(Icons.list,
+                                color: kPrimaryColorInstitute),
+                            hintStyle: const TextStyle(fontSize: 14),
+                            labelStyle: const TextStyle(fontSize: 14),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 14),
+                            hintText: ' Type like flutter,',
+                            labelText: 'Key Skills',
+                            enabledBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30)),
+                                borderSide:
+                                    BorderSide(color: kPrimaryColorInstitute)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: kPrimaryColorInstitute),
+                                borderRadius: BorderRadius.circular(30))),
+                        itemSubmitted: (item) {
+                          setState(() {
+                            controller.keySkills.add(item.toString());
+                          });
+                        },
+                        suggestions: const [], //controller.keySkillsSuggestions,
+                        itemBuilder: (context, item) {
+                          return Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.toString(),
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        itemSorter: (a, b) {
+                          return a!.toString().compareTo(b.toString());
+                        },
+                        itemFilter: (item, query) {
+                          return item!
+                              .toString()
+                              .toLowerCase()
+                              .startsWith(query.toLowerCase());
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      controller.keySkills.isEmpty
+                          ? Container()
+                          : Wrap(
+                              runSpacing: 6,
+                              spacing: 6,
+                              children: List<Widget>.generate(
+                                  controller.keySkills.length, (index) {
+                                return Chip(
+                                  padding: const EdgeInsets.all(8),
+                                  deleteIconColor: Colors.white,
+                                  backgroundColor: kPrimaryColorInstitute,
+                                  label: Text(
+                                    controller.keySkills[index],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                  onDeleted: () {
+                                    setState(() {
+                                      controller.keySkills.removeAt(index);
+                                    });
+                                  },
+                                );
+                              }),
+                            ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       Row(
                         children: [
                           Expanded(
@@ -221,9 +346,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                             child: MaterialButton(
                               height: 60,
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
+                                // if (_formKey.currentState!.validate()) {
                                   controller.addEmployeeDetails(false);
-                                }
+                                // }
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),

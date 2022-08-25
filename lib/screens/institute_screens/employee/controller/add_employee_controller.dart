@@ -1,4 +1,7 @@
+import 'package:RapidRecruits/models/state_model.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +26,25 @@ class AddEmployeeController extends GetxController {
   TextEditingController designation = TextEditingController();
   List<EmployeeModel> data = <EmployeeModel>[];
   final apiHelper = GetIt.I<ApiBaseHelper>();
+
+  List<India> tempStates = <India>[];
+  List<String> allStates = <String>[];
+  String newState = '';
+  List<String> keySkills = [];
+
+  TextEditingController skillsController = TextEditingController();
+
+  GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
+
+  loadStates() async {
+    String data = await rootBundle.loadString('assets/location/states.json');
+    final jsonResult = stateModelFromJson(data);
+    tempStates = jsonResult.india;
+    for (var element in jsonResult.india) {
+      allStates.add(element.state);
+    }
+  }
+
   Future<void> addEmployeeDetails(bool addAnother) async {
     loading.value = true;
     Box? box = await Hive.openBox('userBox');
@@ -44,7 +66,9 @@ class AddEmployeeController extends GetxController {
         "email": email.text,
         "phone_number": phoneNumber.text,
         "department": department.text,
-        "designation": designation.text
+        "designation": designation.text,
+        "state": newState,
+        "skills": keySkills
       }
     });
     loading.value = false;
